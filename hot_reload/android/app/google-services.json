@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "366455679235",
+    "project_id": "hotreload-edf06",
+    "storage_bucket": "hotreload-edf06.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:366455679235:android:5929c941c1d8bc2827e136",
+        "android_client_info": {
+          "package_name": "com.example.hot_reload"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLQejjYhJf2xsamTsYy-cMjXfly1vtwCc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
