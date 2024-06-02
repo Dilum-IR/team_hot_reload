@@ -1,6 +1,8 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/constraints/colors.dart';
+
 class UploadFileProgress extends StatefulWidget {
   final uploadTask;
   final double height;
@@ -30,8 +32,8 @@ class _UploadFileProgressState extends State<UploadFileProgress> {
                       children: [
                         LinearProgressIndicator(
                           value: progress,
-                          color: Colors.orangeAccent,
-                          backgroundColor: Colors.orangeAccent.withOpacity(0.3),
+                          color: KColors.primary,
+                          backgroundColor: KColors.primary.withOpacity(0.3),
                         ),
                         Center(
                           child: Text(

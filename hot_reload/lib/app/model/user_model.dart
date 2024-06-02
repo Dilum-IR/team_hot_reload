@@ -11,12 +11,14 @@ class UserModel {
   late String phone;
   late List links;
   late String image_url;
+  late bool isAvailable;
 
   UserModel.register({
     required this.id,
     required this.name,
     required this.email,
     required this.userType,
+    required this.isAvailable,
   });
 
   Map<String, dynamic> toJson() {
@@ -25,19 +27,22 @@ class UserModel {
       "userType": userType,
       "name": name,
       "email": email,
+      "isAvailable": isAvailable,
     };
   }
 
   // about me model
-  UserModel.aboutMe(
-      {required this.id,
-      required this.name,
-      required this.email,
-      required this.userType,
-      required this.phone,
-      required this.dob,
-      required this.links,
-      required this.image_url});
+  UserModel.aboutMe({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.userType,
+    required this.phone,
+    required this.dob,
+    required this.links,
+    required this.image_url,
+    required this.isAvailable,
+  });
 
   Map<String, dynamic> toJsonAboutMe() {
     return {
@@ -62,6 +67,7 @@ class UserModel {
       dob: data['dob'] ?? '',
       links: data['links'] ?? [],
       image_url: data['image_url'] ?? KTexts.profileImg,
+      isAvailable: data['isAvailable'] ?? true,
     );
   }
 

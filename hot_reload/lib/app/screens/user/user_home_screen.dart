@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hot_reload/app/screens/user/profile.dart';
 import 'package:hot_reload/components/style/text_styles.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import '../../../components/loading_screen.dart';
 import '../../../components/style/app_input_style.dart';
+import '../../../components/widget/comman_widget/custom_image.dart';
+import '../../../components/widget/comman_widget/space.dart';
 import '../../../components/widget/popular_widget.dart';
 import '../../../components/widget/recomond_widget.dart';
 import '../../../utils/constraints/colors.dart';
+import '../../../utils/constraints/texts.dart';
 import '../../../utils/helper/device.dart';
 import '../../../utils/helper/user_handler.dart';
 import '../../../components/widget/comman_widget/show_confirm.dart';
@@ -19,8 +23,11 @@ import '../../controllers/payment/payment_controller.dart';
 import '../../controllers/send_mail/send_mail.dart';
 import '../../controllers/user/shared_auth_user.dart';
 import '../../controllers/user/user_feature_controller.dart';
+import '../../controllers/user/user_signup_controller.dart';
 import '../../model/employee_job_post.dart';
+import '../../model/event_model.dart';
 import '../welcome_screen.dart';
+import 'manage_application1.dart';
 
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({super.key});
@@ -31,6 +38,15 @@ class UserHomeScreen extends StatefulWidget {
 
 class UserHomeScreenState extends State<UserHomeScreen> {
   bool _isloading = false;
+
+  final userController = Get.put(UserSignUpController());
+  final userFeatureController = Get.put(UserFeatureController());
+  List<EventModel> eventData = [];
+
+  void getAllEvent() async {
+    List<EventModel> eventData = await userFeatureController.getAllEvents();
+    print(eventData);
+  }
 
   @override
   void initState() {
@@ -43,12 +59,19 @@ class UserHomeScreenState extends State<UserHomeScreen> {
 
     print(data);
     // get posted jobs
-    getAllJobs();
 
     setState(() {
       _isloading = true;
     });
+
+    allEvents();
     super.initState();
+  }
+
+  void allEvents() async {
+    setState(() {
+      _isloading = false;
+    });
   }
 
   @override
@@ -61,36 +84,12 @@ class UserHomeScreenState extends State<UserHomeScreen> {
   }
 
   final controller = Get.put(EmployeeFeatureController());
-  final userController = Get.put(UserFeatureController());
+  // final userController = Get.put(UserFeatureController());
 
   List<EmployeeJobPost> postedJob = [];
   List<EmployeeJobPost> recomenrJob = [];
 
   var type = [];
-
-  Future<void> getAllJobs() async {
-    postedJob = await controller.getAllJob();
-
-    // list sort for date
-    postedJob
-        .sort((ele_1, ele_2) => ele_2.post_time.compareTo(ele_1.post_time));
-
-    // get types
-    for (var x in postedJob) {
-      if (!type.contains(x.job_type)) {
-        type.add(x.job_type);
-      }
-      if (!type.contains(x.type_of_workspace)) {
-        type.add(x.type_of_workspace);
-      }
-      if (!type.contains(x.category)) {
-        type.add(x.category);
-      }
-    }
-    setState(() {
-      _isloading = false;
-    });
-  }
 
   int _current = 0;
 
@@ -121,17 +120,14 @@ class UserHomeScreenState extends State<UserHomeScreen> {
                 ),
               )
             : Container(),
-        leading: IconButton(
-          splashRadius: 20,
-          onPressed: () {
-            print("payment taped");
-            paymentController.startOneTimePayment(context);
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                icon: Icon(Icons.menu));
           },
-          icon: const Icon(
-            Icons.menu_rounded,
-            color: Colors.black,
-            size: 30,
-          ),
         ),
         actions: [
           IconButton(
@@ -140,12 +136,12 @@ class UserHomeScreenState extends State<UserHomeScreen> {
               if (kDebugMode) {
                 print("send email");
               }
-              emailController.sendEmail(
-                name: "Dilum Induwara",
-                message: "this is a hot reload email content",
-                email: "dirathnayake1911441@gmail.com",
-                subject: "hot reload send the email",
-              );
+              // emailController.sendEmail(
+              //   name: "Dilum Induwara",
+              //   message: "this is a hot reload email content",
+              //   email: "dirathnayake1911441@gmail.com",
+              //   subject: "hot reload send the email",
+              // );
             },
             icon: const Icon(
               Icons.share,
@@ -179,283 +175,277 @@ class UserHomeScreenState extends State<UserHomeScreen> {
       ),
       body: _isloading == true
           ? const LoadingScreen()
-          : Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 17,
-                    right: 17,
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      suffixIcon: Icon(Icons.filter_list),
+                      hintText: 'Search Events',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
                   ),
-                  child: Row(
+                  SizedBox(height: 16.0),
+                  GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 12.0,
+                    mainAxisSpacing: 16.0,
                     children: [
-                      Container(
-                        width: width - 90,
-                        child: TextField(
-                          cursorColor: Colors.black,
-                          cursorHeight: 20,
-                          controller: searchController,
-                          // onChanged: (search) => onSearchChanged(search),
-                          decoration: InputDecoration(
-                            border: AppInputStyle.outlineInputBorder,
-                            focusedBorder: AppInputStyle.outlineInputBorder,
-                            contentPadding: AppInputStyle.contentPadding,
-                            fillColor: AppInputStyle.validFillColor,
-                            hintText: "Search Jobs",
-                            labelText: "Search Jobs",
-                            hintStyle: KTextStyles.smallerGText,
-                            labelStyle: KTextStyles.smallerBText,
-                            floatingLabelStyle: KTextStyles.blackXlText,
-                            prefixIcon: const Icon(
-                              Icons.search,
-                              size: 30,
-                              color: Colors.orangeAccent,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: IconButton(
-                          onPressed: () {
-                            print("object");
-                          },
-                          icon: const Icon(
-                            Icons.filter_list_sharp,
-                            color: Colors.white,
-                          ),
-                        ),
-                      )
+                      _buildStatusCard('Projects Completed', '1.3 K'),
+                      _buildStatusCard('Active Volunteers', '754'),
+                      _buildStatusCard('Donations Received', '\$6M+'),
                     ],
                   ),
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 17.0),
-                  child: Text(
-                    "Most Popular",
-                    style: GoogleFonts.lato(
-                      color: KColors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                  SizedBox(height: 6.0),
+                  Text('Next Event',
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 8.0),
+                  Container(
+                    height: 180.0,
+                    width: double.infinity,
+                    child: _buildEventCard('Wildlife Habitat Enhancement',
+                        'Everglades National Park, Florida', '1 day'),
+                  ),
+                  SizedBox(height: 16.0),
+                  Text('Organizations',
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 8.0),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Wrap(
+                      spacing: 12.0,
+                      runSpacing: 16.0,
+                      children: [
+                        _buildOrganizationCircle('Planet Protectors'),
+                        _buildOrganizationCircle('Clean Air Initiative'),
+                        _buildOrganizationCircle('Unity in Action'),
+                        _buildOrganizationCircle('Active Lives'),
+                        _buildOrganizationCircle('Hope Crew'),
+                        _buildOrganizationCircle('View All'),
+                      ],
                     ),
                   ),
+                  SizedBox(height: 26.0),
+                  Text('Current Programs',
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 8.0),
+                  _buildEventCard('Current Program Example', '', '12 days'),
+                ],
+              ),
+            ),
+    );
+  }
+
+  Widget _buildStatusCard(String title, String count) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      padding: EdgeInsets.all(12.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            count,
+            style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8.0),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16.0),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEventCard(String title, String location, String daysLeft) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 120.0,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(8.0)),
                 ),
-                const SizedBox(
-                  height: 10,
+                child: Center(
+                  child: Icon(Icons.image, size: 50.0, color: Colors.grey[600]),
                 ),
-                postedJob.isEmpty
-                    ? Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 50, vertical: 12),
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 17,
-                        ),
-                        width: width,
-                        height: height / 3.6,
-                        decoration: BoxDecoration(
-                            color: Colors.orangeAccent.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Center(
-                          child: Text(
-                            textAlign: TextAlign.center,
-                            "No jobs posted. Please check back later.",
-                            style: GoogleFonts.lato(
-                              color: Colors.orangeAccent,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      )
-                    : SizedBox(
-                        width: width,
-                        height: height / 3.6,
-                        child: Container(
-                          // width: double.infinity,
-                          // height: double.infinity,
-                          child: CarouselSlider(
-                              carouselController: _carouselController,
-                              options: CarouselOptions(
-                                  initialPage: 0,
-                                  autoPlay: true,
-                                  padEnds: true,
-                                  animateToClosest: true,
-                                  enlargeCenterPage: true,
-                                  autoPlayInterval: const Duration(seconds: 4),
-                                  autoPlayAnimationDuration:
-                                      const Duration(milliseconds: 800),
-                                  height: height / 3.9,
-                                  // aspectRatio: 9 / 16,
-                                  viewportFraction: 0.67,
-                                  enlargeFactor: 0.427,
-                                  pageSnapping: true,
-                                  onPageChanged: (index, reason) {
-                                    setState(() {
-                                      _current = index;
-                                    });
-                                  }),
-                              items: postedJob.map((element) {
-                                return Builder(
-                                  builder: (BuildContext context) {
-                                    return PopularWidget(
-                                      element: element,
-                                    );
-                                  },
-                                );
-                              }).toList()),
-                        ),
-                      ),
-                const SizedBox(
-                  height: 10,
-                ),
-                postedJob.isEmpty
-                    ? Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 50, vertical: 12),
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 17,
-                        ),
-                        width: width,
-                        height: height / 18,
-                        decoration: BoxDecoration(
-                            color: Colors.orangeAccent.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Center(
-                          child: Text(
-                            textAlign: TextAlign.center,
-                            "Popular tags are not available.",
-                            style: GoogleFonts.lato(
-                              color: Colors.orangeAccent,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      )
-                    : Container(
-                        width: width,
-                        height: height / 18,
-                        // color: Colors.orangeAccent,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.only(left: 17),
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: type.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                // maxWidth: 150,
-                                minWidth: 50,
-                              ),
-                              child: Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 10),
-                                height: height / 20,
-                                decoration: BoxDecoration(
-                                    color: Colors.orangeAccent,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Center(
-                                  child: Text(
-                                    type[index],
-                                    style: GoogleFonts.lato(
-                                      color: KColors.white,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 17.0),
-                  child: Text(
-                    "Recommended For You",
-                    style: GoogleFonts.lato(
-                      color: KColors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.bold),
                     ),
+                    SizedBox(height: 4.0),
+                    Text(
+                      location,
+                      style: TextStyle(fontSize: 14.0, color: Colors.grey[700]),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: -5.0,
+            right: 18.0,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  width: 60,
+                  height: 95,
+                  child: Image.asset(
+                    'assets/images/ribbon.png',
+                    width: 60,
+                    height: 80,
+                    fit: BoxFit.fill,
                   ),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Expanded(
-                  child: postedJob.isEmpty
-                      ? Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 50, vertical: 12),
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 17, vertical: 12),
-                          width: width,
-                          height: double.maxFinite,
-                          decoration: BoxDecoration(
-                              color: Colors.orangeAccent.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Center(
-                            child: Text(
-                              textAlign: TextAlign.center,
-                              "No jobs posted. Please check back later.",
-                              style: GoogleFonts.lato(
-                                color: Colors.orangeAccent,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        )
-                      : Container(
-                          padding: const EdgeInsets.only(
-                            top: 10,
-                          ),
-                          width: width,
-                          height: double.maxFinite,
-                          child: LiquidPullToRefresh(
-                            height: 100,
-                            backgroundColor: Colors.orangeAccent,
-                            color: Colors.orangeAccent.withOpacity(0.7),
-                            onRefresh: getAllJobs,
-                            child: ListView.builder(
-                              padding: const EdgeInsets.only(top: 10),
-                              physics: const BouncingScrollPhysics(),
-                              itemCount: postedJob.length,
-                              scrollDirection: Axis.vertical,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 17),
-                                  child: RecommondWidget(
-                                    element: postedJob[index],
-                                    index: index,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment
+                      .start, // Change to MainAxisAlignment.start
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      daysLeft.split(' ')[0], // Get the number part
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      daysLeft.split(' ')[1], // Get the 'day' part
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOrganizationCircle(String name) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 30.0,
+          backgroundColor: Colors.grey[200],
+          child: Icon(Icons.group, size: 30.0),
+        ),
+        SizedBox(height: 8.0),
+        Container(
+          width: 60.0, // Adjust the width to control wrapping
+          child: Text(
+            name,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 12.0),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget MyDrawer() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Get.to(() => UserProfile(),
+                        transition: Transition.cupertino,
+                        duration: Duration(seconds: 1));
+                  },
+                  child: Container(
+                    child: CustomImage(
+                      image: SharedAuthUser.getimageUrl() ?? KTexts.profileImg,
+                      size: 110,
+                    ),
+                  ),
+                ),
+                KW12Space(),
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '${UserHandler.name}',
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  ),
+                ),
+              ],
+            ),
+            decoration: BoxDecoration(
+              color: KColors.primary,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text('Home'),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+              Get.to(() => UserHomeScreen(),
+                  transition: Transition.cupertino,
+                  duration: Duration(seconds: 1));
+              getAllEvent();
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.ac_unit),
+            title: Text('Applications'),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+              Get.to(() => manageapplication1(),
+                  transition: Transition.cupertino,
+                  duration: Duration(seconds: 1));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.contact_page),
+            title: Text('Event'),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+              // Get.to(() => Events(),
+              //     transition: Transition.cupertino,
+              //     duration: Duration(seconds: 1));
+              //
+            },
+          ),
+        ],
+      ),
     );
   }
 }

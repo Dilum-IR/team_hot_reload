@@ -318,13 +318,13 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                         onPressed: () {
                           DownPopup.showPopupContainer(context);
                         },
-                        color: Colors.orangeAccent,
+                        color: KColors.primary,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         child: Text(
                           "Register",
                           style: GoogleFonts.lato(
-                            color: KColors.black,
+                            color: KColors.white,
                             fontSize: 18,
                           ),
                         ),

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hot_reload/app/controllers/user/shared_auth_user.dart';
+import 'package:hot_reload/app/screens/welcome_screen.dart';
 
 import '../../../components/widget/comman_widget/alert_popup.dart';
 import '../../../services/authentication_services.dart';
@@ -7,6 +8,7 @@ import '../../../services/crud_services.dart';
 import '../../../utils/helper/user_handler.dart';
 import '../../model/user_model.dart';
 import '../../screens/auth/signin_screen.dart';
+import '../../screens/organizer/organizer_home_screen.dart';
 import '../../screens/user/navigation_bar.dart';
 
 class UserSignUpController extends GetxController {
@@ -28,6 +30,7 @@ class UserSignUpController extends GetxController {
         id: userCredential.user!.uid,
         name: name,
         userType: userType,
+        isAvailable: true,
       );
 
       await authController
@@ -39,7 +42,6 @@ class UserSignUpController extends GetxController {
           type: 0,
         );
       });
-
       Get.to(
         () => const UserSignin(),
         transition: Transition.rightToLeft,
@@ -60,25 +62,6 @@ class UserSignUpController extends GetxController {
           await crudController.findOne(collection: "Users", filed: userId);
 
       // print(userData);
-
-      if (userData.isNotEmpty) {
-        AlertPopup.warning(
-          title: "Congratulations! 🎉",
-          message: "Login Successful!",
-          type: 0,
-        );
-
-        // print(userData[0].image_url.toString());
-
-        if (userData[0].userType == UserHandler.kUserType) {
-          Get.offAll(
-            () => const CustomNavigationBar(),
-            transition: Transition.cupertino,
-            duration: const Duration(milliseconds: 1000),
-          );
-        }
-      }
-
       // save the users data in to the memory
       if (userData[0] != null) {
         final authUser = [
@@ -86,9 +69,38 @@ class UserSignUpController extends GetxController {
           userData[0].userType.toString(),
           userData[0].email.toString(),
           userData[0].name.toString(),
+          userData[0].isAvailable.toString(),
         ];
         SharedAuthUser.saveAuthUser(authUser);
 
+        // print(userData[0].isAvailable);
+        //
+        // print(SharedAuthUser.getAuthUser());
+        // return;
+
+        if (userData.isNotEmpty) {
+          AlertPopup.warning(
+            title: "Congratulations! 🎉",
+            message: "Login Successful!",
+            type: 0,
+          );
+
+          // print(userData[0].image_url.toString());
+
+          if (userData[0].userType == UserHandler.kUserType) {
+            Get.offAll(
+              () => const CustomNavigationBar(),
+              transition: Transition.cupertino,
+              duration: const Duration(milliseconds: 1000),
+            );
+          } else if (userData[0].userType == UserHandler.kEmpType) {
+            Get.offAll(
+              () => const OrganizerHomeScreen(),
+              transition: Transition.cupertino,
+              duration: const Duration(milliseconds: 1000),
+            );
+          }
+        }
         final aboutme = [
           // dob
           userData[0].dob.toString(),
@@ -132,11 +144,11 @@ class UserSignUpController extends GetxController {
 
         if (userData.isEmpty) {
           final newUser = UserModel.register(
-            email: userEmail.toString(),
-            id: userId.toString(),
-            name: userName.toString(),
-            userType: userType ?? UserHandler.kUserType,
-          );
+              email: userEmail.toString(),
+              id: userId.toString(),
+              name: userName.toString(),
+              userType: userType ?? UserHandler.kUserType,
+              isAvailable: true);
 
           await authController
               .insertUser(collection: "Users", user: newUser)
@@ -159,6 +171,7 @@ class UserSignUpController extends GetxController {
                   : UserHandler.kUserType,
           userEmail.toString(),
           userName.toString(),
+          "true",
         ];
         SharedAuthUser.saveAuthUser(authUser);
 
@@ -171,6 +184,12 @@ class UserSignUpController extends GetxController {
         if (userData[0].userType == UserHandler.kUserType) {
           Get.offAll(
             () => const CustomNavigationBar(),
+            transition: Transition.cupertino,
+            duration: const Duration(milliseconds: 1000),
+          );
+        } else if (userData[0].userType == UserHandler.kEmpType) {
+          Get.offAll(
+            () => const OrganizerHomeScreen(),
             transition: Transition.cupertino,
             duration: const Duration(milliseconds: 1000),
           );
@@ -203,11 +222,11 @@ class UserSignUpController extends GetxController {
 
         if (userData.isEmpty) {
           final newUser = UserModel.register(
-            email: userEmail.toString(),
-            id: userId.toString(),
-            name: userName.toString(),
-            userType: userType ?? UserHandler.kUserType,
-          );
+              email: userEmail.toString(),
+              id: userId.toString(),
+              name: userName.toString(),
+              userType: userType ?? UserHandler.kUserType,
+              isAvailable: true);
 
           await authController
               .insertUser(collection: "Users", user: newUser)
@@ -252,5 +271,6 @@ class UserSignUpController extends GetxController {
 
   void logoutUser() {
     AuthenticationService.instance.logoutUser();
+    Get.offAll(() => WelcomeScreen());
   }
 }

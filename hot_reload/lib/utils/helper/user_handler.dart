@@ -12,6 +12,6 @@ class UserHandler {
     return name[0].toUpperCase() + name.substring(1);
   }
 
-  static const kUserType = "User";
-  static const kEmpType = "Employee";
+  static const kUserType = "Volunteer";
+  static const kEmpType = "Organizer";
 }

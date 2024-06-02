@@ -4,6 +4,7 @@ import 'package:flutter_config/flutter_config.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:hot_reload/services/api/firebase_api.dart';
+import 'package:hot_reload/utils/constraints/colors.dart';
 
 import 'app/controllers/user/shared_auth_user.dart';
 import 'app/screens/check_connection/check_network.dart';
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Developed by Team Hot Reload',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        primarySwatch: KColors.app_primary,
       ),
       home: const CheckNetwork(),
     );

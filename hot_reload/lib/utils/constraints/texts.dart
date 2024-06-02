@@ -2,12 +2,12 @@
 
 class KTexts {
   // App logo images
-  static const String logoImg = "assets/logo/logo.png";
+  static const String logoImg = "assets/logo/Volinify.png";
   // App login images
   static const String authImg = "assets/images/signin_img.jpg";
 
   // App OnBoarding Titles
-  static const String onBoardingTitle1 = "Sign in to your CareerWave account!";
+  static const String onBoardingTitle1 = "Sign in to your Volunify account!";
   static const String onBoardingTitle2 = "Surf Your Way to Success!";
   static const String onBoardingTitle3 =
       "Unlock doors to your dream career journey!";

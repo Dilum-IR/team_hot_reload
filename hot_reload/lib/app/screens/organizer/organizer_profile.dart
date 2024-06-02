@@ -19,14 +19,14 @@ import '../../controllers/user/shared_auth_user.dart';
 import '../../controllers/user/user_feature_controller.dart';
 import '../../controllers/user/user_signup_controller.dart';
 
-class UserProfile extends StatefulWidget {
-  const UserProfile({super.key});
+class OrganizerProfile extends StatefulWidget {
+  const OrganizerProfile({super.key});
 
   @override
-  State<UserProfile> createState() => _UserProfileState();
+  State<OrganizerProfile> createState() => Oorganizer_profPeState();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class Oorganizer_profPeState extends State<OrganizerProfile> {
   @override
   Widget build(BuildContext context) {
     // var height = KDeviceUtils.getHeight(context);

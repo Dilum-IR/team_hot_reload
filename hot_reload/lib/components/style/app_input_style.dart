@@ -69,8 +69,13 @@ class AppInputStyle {
   static Icon searchIcon = const Icon(
     Icons.search_rounded,
     size: 30,
-    color: KColors.app_primary,
+    color: KColors.black,
   );
+  // static Icon eventIcon = const Icon(
+  //   // Icons.e,
+  //   size: 30,
+  //   color: KColors.black,
+  // );
 
   // ----------------------------------- padding -----------------------------------
   static EdgeInsets contentPadding =

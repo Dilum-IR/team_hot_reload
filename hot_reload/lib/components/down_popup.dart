@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../app/screens/auth/signup_screen.dart';
+import '../utils/constraints/colors.dart';
 import '../utils/helper/user_handler.dart';
 
 class DownPopup {
@@ -50,7 +51,7 @@ class DownPopup {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     child: const Text(
-                      "Register as a User",
+                      "Register as a Volunteer",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
@@ -74,12 +75,12 @@ class DownPopup {
                     },
                     color: Colors.white,
                     shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.orangeAccent),
+                        side: BorderSide(color: KColors.primary),
                         borderRadius: BorderRadius.circular(10)),
                     child: const Text(
-                      "Register as a Employee",
+                      "Register as a Organizer",
                       style: TextStyle(
-                        color: Colors.orangeAccent,
+                        color: KColors.primary,
                         fontSize: 15,
                       ),
                     ),

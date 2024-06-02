@@ -1,10 +1,12 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:hot_reload/app/screens/user/user_home_screen.dart';
 
 import '../../../components/widget/comman_widget/no_connection.dart';
 import '../../../utils/helper/user_handler.dart';
 import '../../controllers/user/shared_auth_user.dart';
 import '../on_boarding/on_boarding_screen.dart';
+import '../organizer/organizer_home_screen.dart';
 import '../user/navigation_bar.dart';
 import '../user/qr_scan_generator.dart';
 
@@ -36,7 +38,10 @@ class _CheckNetworkState extends State<CheckNetwork> {
                   // Todo : sign in two method redirection
                   if (SharedAuthUser.getAuthUser()[1] ==
                       UserHandler.kUserType) {
-                    return const CustomNavigationBar();
+                    return const UserHomeScreen();
+                  } else if (SharedAuthUser.getAuthUser()[1] ==
+                      UserHandler.kEmpType) {
+                    return const OrganizerHomeScreen();
                   } else {
                     return const OnBoardingScreen();
                   }

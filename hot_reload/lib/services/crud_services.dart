@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hot_reload/app/model/event_model.dart';
 
 import '../app/model/education.dart';
 import '../app/model/employee_job_post.dart';
@@ -209,25 +210,72 @@ class CrudServices {
     }
   }
 
-  Future<dynamic> findJobOne(
-      {required String collection,
-      required String filed,
-      required Timestamp date}) async {
+  Future<dynamic> findEvents({
+    required String collection,
+    required String filed,
+  }) async {
     try {
       final sanpshot = await service
           .collection(collection)
-          .where("id", isEqualTo: filed)
-          .where("post_time", isEqualTo: date)
+          // .where("organizerId", isEqualTo: filed)
           .get();
 
-      return sanpshot.docs
-          .map((obj) => EmployeeJobPost.fromSnapshot(obj))
-          .single;
+      List<EventModel> events =
+          sanpshot.docs.map((obj) => EventModel.fromSnapshot(obj)).toList();
+
+      print(events);
+      return events;
 
       // await service.collection(collection).doc(filed).where(key, isEqualTo: filed).get().then((value) {
       //   final data = EmployeeJobPost.fromSnapshot(value);
       //   print(data);
       // });
+
+    } on FirebaseException catch (e) {
+      // print("\n\n${e.code}\n\n");
+      final ex = CrudFailure.code(e.code);
+      AlertPopup.warning(
+        title: "Try again later",
+        message: ex.message,
+        type: 1,
+      );
+      // print("firebase exception ${ex.message}");
+      throw ex;
+    } catch (_) {
+      print("_");
+      print(_);
+
+      final ex = CrudFailure();
+      AlertPopup.warning(
+        title: "Try again later",
+        message: ex.message + ".",
+        type: 1,
+      );
+      // print("exception-1 ${ex.message}");
+      throw ex;
+    }
+  }
+
+  Future<dynamic> findAllUsers({
+    required String collection,
+  }) async {
+    try {
+      final sanpshot = await service
+          .collection(collection)
+          // .where("organizerId", isEqualTo: filed)
+          .get();
+
+      List<UserModel> events =
+          sanpshot.docs.map((obj) => UserModel.fromSnapshot(obj)).toList();
+
+      print(events);
+      return events;
+
+      // await service.collection(collection).doc(filed).where(key, isEqualTo: filed).get().then((value) {
+      //   final data = EmployeeJobPost.fromSnapshot(value);
+      //   print(data);
+      // });
+
     } on FirebaseException catch (e) {
       // print("\n\n${e.code}\n\n");
       final ex = CrudFailure.code(e.code);

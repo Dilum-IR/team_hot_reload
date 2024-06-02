@@ -5,18 +5,21 @@ import 'package:flutter/material.dart';
 class KColors {
   KColors._();
 
+  // 3B82F6 Organizer
+  // #10B981 Volunteer
+
   // primary theme data app color
-  static const MaterialColor app_primary = MaterialColor(0XFF430C30, {
-    50: Color(0XFF430C30),
-    100: Color(0XFF430C30),
-    200: Color(0XFF430C30),
-    300: Color(0XFF430C30),
-    400: Color(0XFF430C30),
-    500: Color(0XFF430C30),
-    600: Color(0XFF430C30),
-    700: Color(0XFF430C30),
-    800: Color(0XFF430C30),
-    900: Color(0XFF430C30),
+  static const MaterialColor app_primary = MaterialColor(0XFF10B981, {
+    50: Color(0XFF10B981),
+    100: Color(0XFF10B981),
+    200: Color(0XFF10B981),
+    300: Color(0XFF10B981),
+    400: Color(0XFF10B981),
+    500: Color(0XFF10B981),
+    600: Color(0XFF10B981),
+    700: Color(0XFF10B981),
+    800: Color(0XFF10B981),
+    900: Color(0XFF10B981),
   });
 
   // on board colors
@@ -24,7 +27,9 @@ class KColors {
 
   static const Color background = Color.fromRGBO(232, 232, 232, 1);
 
-  static const Color primary = Color.fromRGBO(67, 12, 48, 1);
+  static const Color primary = Color(0XFF10B981);
+  // static const Color primaryvolunteer = Color(0XFF10B981);
+
   static const Color secondary = Color.fromRGBO(255, 97, 97, 1);
 
   static const Color white = Color.fromRGBO(253, 251, 246, 1);

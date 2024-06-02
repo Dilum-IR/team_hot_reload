@@ -110,7 +110,7 @@ class UserSignupState extends State<UserSignup> {
                           filled: validName ? true : false,
                           fillColor: AppInputStyle.validFillColor,
                           hintText: "Brandon Loise",
-                          labelText: "Name",
+                          labelText: "Name of the ${UserHandler.currentUser}",
                           hintStyle: KTextStyles.smallerGText,
                           labelStyle: KTextStyles.smallerBText,
                           floatingLabelStyle: KTextStyles.blackXlText,
@@ -382,7 +382,7 @@ class UserSignupState extends State<UserSignup> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Already have an account ?"),
+                    const Text("Already a Member ?"),
                     TextButton(
                       style: TextButton.styleFrom(
                         primary: Colors.black,

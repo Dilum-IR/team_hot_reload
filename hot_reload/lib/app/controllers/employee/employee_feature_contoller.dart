@@ -49,23 +49,4 @@ class EmployeeFeatureController extends GetxController {
       return [];
     }
   }
-
-  void updateJobViews(String id, Timestamp date) async {
-    try {
-      final job = await crudController.findJobOne(
-          collection: "Jobs", filed: id, date: date);
-
-      print("job.view");
-      print(job.post_time);
-      print("job.view");
-
-      // var data = {
-      //   ""
-      //       "view": job.view + 1
-      // };
-
-      // await crudController.update(collection: "Jobs",data: data,filed: id, date: date);
-
-    } catch (e) {}
-  }
 }
