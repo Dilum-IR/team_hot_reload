@@ -53,7 +53,7 @@ class KTexts {
   static const googleLogo = "assets/images/brands_logo/google.png";
 
   // images
-  static const logo = "assets/images/brands_logo/icon_3.png";
+  static const logo = "assets/images/logo/Volinify.png";
 
   static const profileImg =
       "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
