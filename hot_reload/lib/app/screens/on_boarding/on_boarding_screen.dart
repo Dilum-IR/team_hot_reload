@@ -48,13 +48,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
     const OnBoardPage(
       color: KColors.onboardColor,
       image: KTexts.onBoardImage1,
-      title: "Welcome to Career Wave!",
-      sub_title: "Sign in to your CareerWave account!",
+      title: "Welcome to Volinify!",
+      sub_title: "Sign in to your  account!",
     ),
     const OnBoardPage(
       color: KColors.onboardColor,
       image: KTexts.onBoardImage2,
-      title: "Connect With Job Community",
+      title: "Connect With Community",
       sub_title: "Surf Your Way to Success!",
     ),
     const OnBoardPage(
